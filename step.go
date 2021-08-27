@@ -6,6 +6,7 @@ import (
 	"github.com/BirmacherAkos/bitrise-step-set-java-version/javaSetter"
 	"github.com/bitrise-io/go-steputils/stepconf"
 	"github.com/bitrise-io/go-steputils/tools"
+	"github.com/bitrise-io/go-utils/command"
 	"github.com/bitrise-io/go-utils/env"
 	"github.com/bitrise-io/go-utils/log"
 )
@@ -24,11 +25,12 @@ type JavaSelector struct {
 	inputParser   stepconf.InputParser
 	envRepository env.Repository
 	logger        log.Logger
+	cmdFactory    command.Factory
 }
 
 // NewActivateSSHKey ...
-func NewJavaSelector(inputParser stepconf.InputParser, envRepository env.Repository, logger log.Logger) *JavaSelector {
-	return &JavaSelector{inputParser: inputParser, envRepository: envRepository, logger: logger}
+func NewJavaSelector(inputParser stepconf.InputParser, envRepository env.Repository, logger log.Logger, cmdFactory command.Factory) *JavaSelector {
+	return &JavaSelector{inputParser: inputParser, envRepository: envRepository, logger: logger, cmdFactory: cmdFactory}
 }
 
 // ProcessConfig ...
@@ -52,7 +54,7 @@ type Result struct {
 // Run ...
 func (j JavaSelector) Run(cfg Config) (Result, error) {
 	versionToSet := javaSetter.JavaVersion(cfg.javaVersion)
-	setter := javaSetter.New(j.logger, versionToSet)
+	setter := javaSetter.New(j.logger, versionToSet, j.cmdFactory)
 	version, err := setter.SetJava()
 
 	return Result{version: version}, err

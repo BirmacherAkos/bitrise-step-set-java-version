@@ -1,8 +1,10 @@
 package javaSetter
 
 import (
+	"os"
 	"runtime"
 
+	"github.com/bitrise-io/go-utils/command"
 	"github.com/bitrise-io/go-utils/log"
 )
 
@@ -30,12 +32,13 @@ func (j JavaSetter) platform() Platform {
 }
 
 type JavaSetter struct {
-	logger  log.Logger
-	version JavaVersion
+	logger     log.Logger
+	version    JavaVersion
+	cmdFactory command.Factory
 }
 
-func New(logger log.Logger, version JavaVersion) *JavaSetter {
-	return &JavaSetter{logger: logger, version: version}
+func New(logger log.Logger, version JavaVersion, cmdFactory command.Factory) *JavaSetter {
+	return &JavaSetter{logger: logger, version: version, cmdFactory: cmdFactory}
 }
 
 func (j JavaSetter) SetJava() (JavaVersion, error) {
@@ -48,7 +51,22 @@ func (j JavaSetter) SetJava() (JavaVersion, error) {
 }
 
 func (j JavaSetter) setJavaMac() (JavaVersion, error) {
-	j.logger.Printf("jenv global 1.8...")
+	cmd := j.cmdFactory.Create(
+		"jenv",
+		[]string{
+			"global", "11;",
+			"export", "JAVA_HOME=", "$(jenv prefix);",
+			"envman", "add", "--key", "JAVA_HOME", "--value", "$(jenv prefix)",
+		},
+		&command.Opts{
+			Stdout: os.Stdout,
+			Stderr: os.Stderr,
+		})
+
+	j.logger.Println()
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+
+	// _, err := cmd.RunAndReturnExitCode()
 	return JavaVersion_8, nil
 }
 
