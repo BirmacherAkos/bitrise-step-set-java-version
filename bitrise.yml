@@ -21,7 +21,7 @@ workflows:
         - is_create_path: true
     - path::./:
         title: Test - Setting Java 8 
-        run_if: "true"
+        run_if: .IsCI
         inputs:
         - set_java_version: "Java 8"
     - script:
@@ -39,7 +39,7 @@ workflows:
         - is_create_path: true
     - path::./:
         title: Test - Setting Java 8 
-        run_if: "true"
+        run_if: .IsCI
         inputs:
         - set_java_version: "Java 8"
     - script:
