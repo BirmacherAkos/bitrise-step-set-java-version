@@ -54,8 +54,8 @@ func (j JavaSetter) setJavaMac() (JavaVersion, error) {
 	cmd := j.cmdFactory.Create(
 		"jenv",
 		[]string{
-			"global", "11;",
-			"export", "JAVA_HOME=", "$(jenv prefix);",
+			"global", "11", ";",
+			"export", "JAVA_HOME=", "$(jenv prefix)", ";",
 			"envman", "add", "--key", "JAVA_HOME", "--value", "$(jenv prefix)",
 		},
 		&command.Opts{
