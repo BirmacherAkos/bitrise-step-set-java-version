@@ -13,7 +13,7 @@ import (
 
 // Config is the Set java version step configuration
 type Input struct {
-	JavaVersion string `env:"set_java_version,opt[Java 11,Java 8]"`
+	JavaVersion string `env:"set_java_version,opt[11,1.8]"`
 }
 
 type Config struct {
