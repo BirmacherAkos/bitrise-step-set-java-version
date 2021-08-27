@@ -28,6 +28,8 @@ workflows:
         inputs:
         - content: |
             #!/bin/bash
+            java -version
+            javac -version
             echo "JAVA_VERSION: $JAVA_VERSION TODO Check!"
 
   test_ubuntu:
