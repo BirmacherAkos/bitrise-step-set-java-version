@@ -66,8 +66,8 @@ func (j JavaSetter) setJavaMac() (JavaVersion, error) {
 	j.logger.Println()
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
 
-	// _, err := cmd.RunAndReturnExitCode()
-	return JavaVersion_8, nil
+	_, err := cmd.RunAndReturnExitCode()
+	return JavaVersion_8, err
 }
 
 func (j JavaSetter) setJavaUbuntu() (JavaVersion, error) {
