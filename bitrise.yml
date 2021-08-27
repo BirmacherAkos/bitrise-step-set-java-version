@@ -12,7 +12,7 @@ app:
   - MY_STEPLIB_REPO_FORK_GIT_URL: $MY_STEPLIB_REPO_FORK_GIT_URL
 
 workflows:
-  test:
+  test_macOS:
     steps:
     - script:
         inputs:
