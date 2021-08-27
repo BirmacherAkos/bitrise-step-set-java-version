@@ -29,7 +29,7 @@ workflows:
         - content: |
             #!/bin/bash
             java -version
-            javac -version
+            echo "JAVA_HOME: $JAVA_HOME TODO Check!"
             echo "JAVA_VERSION: $JAVA_VERSION TODO Check!"
 
   test_ubuntu:
@@ -51,6 +51,7 @@ workflows:
             
             java -version
             javac -version
+            echo "JAVA_HOME: $JAVA_HOME TODO Check!"
             echo "JAVA_VERSION: $JAVA_VERSION TODO Check!"
 
 
