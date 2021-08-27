@@ -23,7 +23,7 @@ workflows:
         title: Test - Setting Java 11 
         run_if: .IsCI
         inputs:
-        - set_java_version: "Java 11"
+        - set_java_version: "11"
     - script:
         inputs:
         - content: |
@@ -41,7 +41,7 @@ workflows:
         title: Test - Setting Java 11
         run_if: .IsCI
         inputs:
-        - set_java_version: "Java 11"
+        - set_java_version: "11"
     - script:
         inputs:
         - content: |

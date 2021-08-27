@@ -11,8 +11,8 @@ import (
 type JavaVersion string
 
 const (
-	JavaVersion_1_8 = JavaVersion("Java 1.8")
-	JavaVersion_11  = JavaVersion("Java 11")
+	JavaVersion_1_8 = JavaVersion("1.8")
+	JavaVersion_11  = JavaVersion("11")
 )
 
 type Platform string
