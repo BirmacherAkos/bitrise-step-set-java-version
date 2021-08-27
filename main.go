@@ -34,8 +34,6 @@ func run() int {
 		return 1
 	}
 
-	logger.Printf("Version: %s", config.javaVersion)
-
 	if err := javaSelector.Export(javaSetter.JavaVersion(config.javaVersion)); err != nil {
 		logger.Errorf(err.Error())
 		return 1
