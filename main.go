@@ -1,31 +1,43 @@
 package main
 
 import (
-	"fmt"
 	"os"
-	"os/exec"
+
+	"github.com/bitrise-io/go-steputils/stepconf"
+	"github.com/bitrise-io/go-steputils/stepenv"
+	"github.com/bitrise-io/go-utils/env"
+	"github.com/bitrise-io/go-utils/log"
 )
 
 func main() {
-	fmt.Println("This is the value specified for the input 'example_step_input':", os.Getenv("example_step_input"))
+	os.Exit(run())
+}
 
-	//
-	// --- Step Outputs: Export Environment Variables for other Steps:
-	// You can export Environment Variables for other Steps with
-	//  envman, which is automatically installed by `bitrise setup`.
-	// A very simple example:
-	cmdLog, err := exec.Command("bitrise", "envman", "add", "--key", "EXAMPLE_STEP_OUTPUT", "--value", "the value you want to share").CombinedOutput()
+func run() int {
+	logger := log.NewLogger()
+	envRepository := stepenv.NewRepository(env.NewRepository())
+	inputParser := stepconf.NewInputParser(envRepository)
+
+	javaSelector := NewJavaSelector(inputParser, envRepository, logger)
+
+	config, err := javaSelector.ProcessConfig()
 	if err != nil {
-		fmt.Printf("Failed to expose output with envman, error: %#v | output: %s", err, cmdLog)
-		os.Exit(1)
+		logger.Errorf(err.Error())
+		return 1
 	}
-	// You can find more usage examples on envman's GitHub page
-	//  at: https://github.com/bitrise-io/envman
 
-	//
-	// --- Exit codes:
-	// The exit code of your Step is very important. If you return
-	//  with a 0 exit code `bitrise` will register your Step as "successful".
-	// Any non zero exit code will be registered as "failed" by `bitrise`.
-	os.Exit(0)
+	result, err := javaSelector.Run(config)
+	if err != nil {
+		logger.Errorf(err.Error())
+		return 1
+	}
+
+	logger.Printf("Version: %s", result.version)
+
+	if err := javaSelector.Export(result); err != nil {
+		logger.Errorf(err.Error())
+		return 1
+	}
+
+	return 0
 }
