@@ -46,26 +46,21 @@ func (j JavaSelector) ProcessConfig() (Config, error) {
 	}, nil
 }
 
-// Result ...
-type Result struct {
-	version javaSetter.JavaVersion
-}
-
 // Run ...
-func (j JavaSelector) Run(cfg Config) (Result, error) {
+func (j JavaSelector) Run(cfg Config) error {
 	versionToSet := javaSetter.JavaVersion(cfg.javaVersion)
-	setter := javaSetter.New(j.logger, versionToSet, j.cmdFactory)
-	version, err := setter.SetJava()
+	setter := javaSetter.New(j.logger, j.cmdFactory)
+	err := setter.SetJava(versionToSet)
 
-	return Result{version: version}, err
+	return err
 }
 
 // Export ...
-func (j JavaSelector) Export(result Result) error {
-	if result.version == "" {
+func (j JavaSelector) Export(version javaSetter.JavaVersion) error {
+	if string(version) == "" {
 		return nil
 	}
-	if err := tools.ExportEnvironmentWithEnvman("JAVA_VERSION", string(result.version)); err != nil {
+	if err := tools.ExportEnvironmentWithEnvman("JAVA_VERSION", string(version)); err != nil {
 		return fmt.Errorf("failed to export environment variable: %s", "JAVA_VERSION")
 	}
 	return nil

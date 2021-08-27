@@ -11,8 +11,8 @@ import (
 type JavaVersion string
 
 const (
-	JavaVersion_8  = JavaVersion("Java 8")
-	JavaVersion_11 = JavaVersion("Java 11")
+	JavaVersion_1_8 = JavaVersion("Java 1.8")
+	JavaVersion_11  = JavaVersion("Java 11")
 )
 
 type Platform string
@@ -33,28 +33,27 @@ func (j JavaSetter) platform() Platform {
 
 type JavaSetter struct {
 	logger     log.Logger
-	version    JavaVersion
 	cmdFactory command.Factory
 }
 
-func New(logger log.Logger, version JavaVersion, cmdFactory command.Factory) *JavaSetter {
-	return &JavaSetter{logger: logger, version: version, cmdFactory: cmdFactory}
+func New(logger log.Logger, cmdFactory command.Factory) *JavaSetter {
+	return &JavaSetter{logger: logger, cmdFactory: cmdFactory}
 }
 
-func (j JavaSetter) SetJava() (JavaVersion, error) {
+func (j JavaSetter) SetJava(version JavaVersion) error {
 	switch j.platform() {
 	case MacOS:
-		return j.setJavaMac()
+		return j.setJavaMac(version)
 	default:
-		return j.setJavaUbuntu()
+		return j.setJavaUbuntu(version)
 	}
 }
 
-func (j JavaSetter) setJavaMac() (JavaVersion, error) {
+func (j JavaSetter) setJavaMac(version JavaVersion) error {
 	cmd := j.cmdFactory.Create(
 		"jenv",
 		[]string{
-			"global", "11", ";",
+			"global", string(version), ";",
 			"export", "JAVA_HOME=", "$(jenv prefix)", ";",
 			"envman", "add", "--key", "JAVA_HOME", "--value", "$(jenv prefix)",
 		},
@@ -67,10 +66,10 @@ func (j JavaSetter) setJavaMac() (JavaVersion, error) {
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
 
 	_, err := cmd.RunAndReturnExitCode()
-	return JavaVersion_8, err
+	return err
 }
 
-func (j JavaSetter) setJavaUbuntu() (JavaVersion, error) {
+func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
 	j.logger.Printf("sudo update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac...")
-	return JavaVersion_8, nil
+	return nil
 }
