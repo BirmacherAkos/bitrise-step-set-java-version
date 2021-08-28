@@ -67,10 +67,8 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 	cmd_prefix := j.cmdFactory.Create(
 		"$(jenv prefix)",
 		[]string{},
-		&command.Opts{
-			Stdout: os.Stdout,
-			Stderr: os.Stderr,
-		})
+		nil,
+	)
 	j.logger.Printf("$ %s", cmd_prefix.PrintableCommandArgs())
 	jenvPrefix, err := cmd_prefix.RunAndReturnTrimmedOutput()
 
@@ -81,10 +79,8 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 	cmd_envman := j.cmdFactory.Create(
 		"envman",
 		[]string{"add", "--key", "JAVA_HOME", "--value", jenvPrefix},
-		&command.Opts{
-			Stdout: os.Stdout,
-			Stderr: os.Stderr,
-		})
+		nil,
+	)
 	j.logger.Printf("$ %s", cmd_envman.PrintableCommandArgs())
 
 	_, err = cmd_envman.RunAndReturnExitCode()
