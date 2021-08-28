@@ -25,9 +25,11 @@ const (
 const (
 	UbuntuJavaPath_1_8  = "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
 	UbuntuJavaCPath_1_8 = "/usr/lib/jvm/java-8-openjdk-amd64/bin/javac"
+	UbuntuJavaHome_1_8  = "/usr/lib/jvm/java-8-openjdk-amd64"
 
 	UbuntuJavaPath_11  = "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
 	UbuntuJavaCPath_11 = "/usr/lib/jvm/java-11-openjdk-amd64/bin/javac"
+	UbuntuJavaHome_11  = "/usr/lib/jvm/java-11-openjdk-amd64"
 )
 
 func (j JavaSetter) platform() Platform {
@@ -111,14 +113,14 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 }
 
 func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
-	javaPath, javaCPath := func() (string, string) {
+	javaPath, javaCPath, javaHome := func() (string, string, string) {
 		switch version {
 		case JavaVersion_1_8:
-			return UbuntuJavaPath_1_8, UbuntuJavaCPath_1_8
+			return UbuntuJavaPath_1_8, UbuntuJavaCPath_1_8, UbuntuJavaHome_1_8
 		case JavaVersion_11:
-			return UbuntuJavaPath_11, UbuntuJavaCPath_11
+			return UbuntuJavaPath_11, UbuntuJavaCPath_11, UbuntuJavaHome_11
 		default:
-			return "", ""
+			return "", "", ""
 		}
 	}()
 
@@ -161,8 +163,25 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
 		return err
 	}
 
-	// TODO export
-	// TODO envman
+	//
+	// envman JAVA_HOME
+	cmd = j.cmdFactory.Create(
+		"envman",
+		[]string{
+			"add",
+			"--key",
+			"JAVA_HOME",
+			"--value",
+			javaHome,
+			string(javaPath),
+		},
+		nil,
+	)
+
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+		return err
+	}
 
 	return nil
 }
