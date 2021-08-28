@@ -22,6 +22,14 @@ const (
 	Ubuntu = Platform("Ubuntu")
 )
 
+const (
+	UbuntuJavaPath_1_8  = "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
+	UbuntuJavaCPath_1_8 = "/usr/lib/jvm/java-8-openjdk-amd64/bin/javac"
+
+	UbuntuJavaPath_11  = "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
+	UbuntuJavaCPath_11 = "/usr/lib/jvm/java-11-openjdk-amd64/bin/javac"
+)
+
 func (j JavaSetter) platform() Platform {
 	if runtime.GOOS == "linux" {
 		return Ubuntu
@@ -103,6 +111,56 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 }
 
 func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
-	j.logger.Printf("sudo update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac...")
+	javaPath, javaCPath := func() (string, string) {
+		switch version {
+		case JavaVersion_1_8:
+			return UbuntuJavaPath_1_8, UbuntuJavaCPath_1_8
+		case JavaVersion_11:
+			return UbuntuJavaPath_11, UbuntuJavaCPath_11
+		default:
+			return "", ""
+		}
+	}()
+
+	//
+	// update-alternatives javac
+	cmd := j.cmdFactory.Create(
+		"sudo update-alternatives",
+		[]string{
+			"--set",
+			"javac",
+			string(javaCPath),
+		},
+		&command.Opts{
+			Stdout: os.Stdout,
+			Stderr: os.Stderr,
+		},
+	)
+
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+		return err
+	}
+
+	//
+	// update-alternatives java
+	cmd = j.cmdFactory.Create(
+		"sudo update-alternatives",
+		[]string{
+			"--set",
+			"java",
+			string(javaPath),
+		},
+		nil,
+	)
+
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+		return err
+	}
+
+	// TODO export
+	// TODO envman
+
 	return nil
 }
