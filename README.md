@@ -2,7 +2,6 @@
 
 [![Step changelog](https://shields.io/github/v/release/BirmacherAkos/bitrise-step-set-java-version?include_prereleases&label=changelog&color=blueviolet)](https://github.com/BirmacherAkos/bitrise-step-set-java-version/releases)
 
-
 ## 📚 Description
 
 This step helps you in setting an already installed java version on the virtual machine. Mind you, that this step can't install any java version, it's only for changing between the already installed versions.
