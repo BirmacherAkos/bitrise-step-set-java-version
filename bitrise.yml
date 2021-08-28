@@ -25,6 +25,20 @@ workflows:
         inputs:
         - set_java_version: "11"
     - script:
+        title: Test - java & javac
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            JAVA_MAIN_VERSION=$(java -version 2>&1 | grep -i version | sed 's/.*version ".*\.\(.*\)\..*"/\1/; 1q')
+            if [[ $JAVA_MAIN_VERSION == "11" ]]; 
+            then
+              echo "java is the expected value $JAVA_MAIN_VERSION = 11"
+            else
+              echo "java is not the expected value $JAVA_MAIN_VERSION . Expected value is: 11"
+              exit 1
+            fi
+    - script:
         title: Test - JAVA_HOME set to /Users/vagrant/.jenv/versions/11
         inputs:
         - content: |
@@ -49,11 +63,11 @@ workflows:
         - content: |
             #!/bin/bash
 
-            if [[ "$JAVA_HOME" == "/Users/vagrant/.jenv/versions/11" ]]; 
+            if [[ "$JAVA_HOME" == "/Users/vagrant/.jenv/versions/1.8" ]]; 
             then
-              echo "JAVA_HOME is the expected value $JAVA_HOME = /Users/vagrant/.jenv/versions/11"
+              echo "JAVA_HOME is the expected value $JAVA_HOME = /Users/vagrant/.jenv/versions/1.8"
             else
-              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/11"
+              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/1.8"
               exit 1
             fi
 
