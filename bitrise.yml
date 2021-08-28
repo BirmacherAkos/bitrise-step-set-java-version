@@ -25,12 +25,15 @@ workflows:
         inputs:
         - set_java_version: "11"
     - script:
+        title: Test - JAVA_HOME set to /Users/vagrant/.jenv/versions/11
         inputs:
         - content: |
             #!/bin/bash
             java -version
-            echo "JAVA_HOME: $JAVA_HOME TODO Check!"
-            echo "JAVA_VERSION: $JAVA_VERSION TODO Check!"
+            if [[$JAVA_HOME != "/Users/vagrant/.jenv/versions/11"]]; 
+            then
+              echo "JAVA_HOME is not the expected value /Users/vagrant/.jenv/versions/11; Value is: $JAVA_HOME"
+            fi
 
   test_ubuntu:
     steps:
