@@ -85,12 +85,9 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 		})
 
 	j.logger.Printf("$ %s", cmd_jenv.PrintableCommandArgs())
-	out, err := cmd_jenv.RunAndReturnTrimmedOutput()
-	if err != nil {
-		j.logger.Printf(out)
+	if _, err := cmd_jenv.RunAndReturnExitCode(); err != nil {
 		return Result{}, err
 	}
-	j.logger.Printf(out)
 
 	//
 	// jenv prefix
@@ -137,12 +134,9 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	out, err := cmd.RunAndReturnTrimmedOutput()
-	if err != nil {
-		j.logger.Printf(out)
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
 		return Result{}, err
 	}
-	j.logger.Printf(out)
 
 	//
 	// update-alternatives java
@@ -158,12 +152,8 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	out, err := cmd.RunAndReturnTrimmedOutput()
-	if err != nil {
-		j.logger.Printf(out)
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
 		return Result{}, err
 	}
-	j.logger.Printf(out)
-
 	return Result{JAVA_HOME: javaHome}, nil
 }
