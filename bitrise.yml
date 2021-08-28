@@ -38,6 +38,25 @@ workflows:
               exit 1
             fi
 
+    - path::./:
+        title: Test - Setting Java 1.8
+        run_if: .IsCI
+        inputs:
+        - set_java_version: "1.8"
+    - script:
+        title: Test - JAVA_HOME set to /Users/vagrant/.jenv/versions/1.8
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            if [[ "$JAVA_HOME" == "/Users/vagrant/.jenv/versions/11" ]]; 
+            then
+              echo "JAVA_HOME is the expected value $JAVA_HOME = /Users/vagrant/.jenv/versions/11"
+            else
+              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/11"
+              exit 1
+            fi
+
   test_ubuntu:
     steps:
     - change-workdir:
