@@ -102,18 +102,6 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 	if err != nil {
 		return Result{}, err
 	}
-
-	// //
-	// // envman add
-	// cmd_envman := j.cmdFactory.Create(
-	// 	"envman",
-	// 	[]string{"add", "--key", "JAVA_HOME", "--value", jenvPrefix},
-	// 	nil,
-	// )
-
-	// j.logger.Printf("$ %s", cmd_envman.PrintableCommandArgs())
-	// _, err = cmd_envman.RunAndReturnExitCode()
-	// return err
 	return Result{JAVA_HOME: javaHome}, nil
 }
 
@@ -167,26 +155,5 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	if _, err := cmd.RunAndReturnExitCode(); err != nil {
 		return Result{}, err
 	}
-
-	// //
-	// // envman JAVA_HOME
-	// cmd = j.cmdFactory.Create(
-	// 	"envman",
-	// 	[]string{
-	// 		"add",
-	// 		"--key",
-	// 		"JAVA_HOME",
-	// 		"--value",
-	// 		javaHome,
-	// 		string(javaPath),
-	// 	},
-	// 	nil,
-	// )
-
-	// j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	// if _, err := cmd.RunAndReturnExitCode(); err != nil {
-	// 	return err
-	// }
-
 	return Result{JAVA_HOME: javaHome}, nil
 }

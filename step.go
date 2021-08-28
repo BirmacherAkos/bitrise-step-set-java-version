@@ -63,6 +63,7 @@ func (j JavaSelector) Export(result javaSetter.Result) error {
 
 	j.logger.Println()
 	j.logger.Infof("Export step outputs")
+	j.logger.Printf("- Exporting JAVA_HOME=%s", result.JAVA_HOME)
 	if err := tools.ExportEnvironmentWithEnvman("JAVA_HOME", result.JAVA_HOME); err != nil {
 		return fmt.Errorf("failed to export environment variable: %s", "JAVA_HOME")
 	}
