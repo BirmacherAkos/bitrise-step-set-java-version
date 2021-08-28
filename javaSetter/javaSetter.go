@@ -24,10 +24,8 @@ const (
 
 func (j JavaSetter) platform() Platform {
 	if runtime.GOOS == "linux" {
-		j.logger.Printf("Platform: Ubuntu")
 		return Ubuntu
 	}
-	j.logger.Printf("Platform: MacOS")
 	return MacOS
 }
 
@@ -41,7 +39,14 @@ func New(logger log.Logger, cmdFactory command.Factory) *JavaSetter {
 }
 
 func (j JavaSetter) SetJava(version JavaVersion) error {
-	switch j.platform() {
+	j.logger.Println()
+	j.logger.Printf("Checking platform")
+
+	platform := j.platform()
+	j.logger.Printf("Platform: %s", string(platform))
+
+	j.logger.Infof("Setting java version: %s", string(version))
+	switch platform {
 	case MacOS:
 		return j.setJavaMac(version)
 	default:
