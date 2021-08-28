@@ -46,11 +46,51 @@ func (j JavaSelector) ProcessConfig() (Config, error) {
 	}, nil
 }
 
+func (j JavaSelector) printJavaVersion() error {
+	//
+	// java -version
+	cmd := j.cmdFactory.Create(
+		"java",
+		[]string{
+			"-version",
+		},
+		nil,
+	)
+
+	j.logger.Infof("java version:")
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	_, err := cmd.RunAndReturnExitCode()
+	return err
+}
+
+func (j JavaSelector) printJavaCVersion() error {
+	//
+	// javac -version
+	cmd := j.cmdFactory.Create(
+		"javac",
+		[]string{
+			"-version",
+		},
+		nil,
+	)
+
+	j.logger.Println()
+	j.logger.Printf("javac version:")
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	_, err := cmd.RunAndReturnExitCode()
+	return err
+}
+
 // Run ...
 func (j JavaSelector) Run(cfg Config) (javaSetter.Result, error) {
 	versionToSet := javaSetter.JavaVersion(cfg.javaVersion)
 	setter := javaSetter.New(j.logger, j.cmdFactory)
 	result, err := setter.SetJava(versionToSet)
+
+	j.logger.Println()
+	j.logger.Infof("Global java & javac version on the after the command run")
+	j.printJavaVersion()
+	j.printJavaCVersion()
 
 	return result, err
 }
