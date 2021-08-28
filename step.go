@@ -58,7 +58,7 @@ func (j JavaSelector) printJavaVersion() error {
 	)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	out, err := cmd.RunAndReturnTrimmedOutput()
+	out, err := cmd.RunAndReturnTrimmedCombinedOutput()
 	j.logger.Printf(out)
 	return err
 }
@@ -76,7 +76,7 @@ func (j JavaSelector) printJavaCVersion() error {
 
 	j.logger.Println()
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	out, err := cmd.RunAndReturnTrimmedOutput()
+	out, err := cmd.RunAndReturnTrimmedCombinedOutput()
 	j.logger.Printf(out)
 	return err
 }
