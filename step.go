@@ -47,21 +47,24 @@ func (j JavaSelector) ProcessConfig() (Config, error) {
 }
 
 // Run ...
-func (j JavaSelector) Run(cfg Config) error {
+func (j JavaSelector) Run(cfg Config) (javaSetter.Result, error) {
 	versionToSet := javaSetter.JavaVersion(cfg.javaVersion)
 	setter := javaSetter.New(j.logger, j.cmdFactory)
-	err := setter.SetJava(versionToSet)
+	result, err := setter.SetJava(versionToSet)
 
-	return err
+	return result, err
 }
 
 // Export ...
-func (j JavaSelector) Export(version javaSetter.JavaVersion) error {
-	if string(version) == "" {
+func (j JavaSelector) Export(result javaSetter.Result) error {
+	if string(result.JAVA_HOME) == "" {
 		return nil
 	}
-	if err := tools.ExportEnvironmentWithEnvman("JAVA_VERSION", string(version)); err != nil {
-		return fmt.Errorf("failed to export environment variable: %s", "JAVA_VERSION")
+
+	j.logger.Println()
+	j.logger.Infof("Export step outputs")
+	if err := tools.ExportEnvironmentWithEnvman("JAVA_HOME", result.JAVA_HOME); err != nil {
+		return fmt.Errorf("failed to export environment variable: %s", "JAVA_HOME")
 	}
 	return nil
 }
