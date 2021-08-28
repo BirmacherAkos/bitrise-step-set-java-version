@@ -107,6 +107,11 @@ workflows:
               exit 1
             fi
 
+  generate-readme:
+    steps:
+    - git::https://github.com/bitrise-steplib/steps-readme-generator.git@main:
+        title: Generate README
+
   # ----------------------------------------------------------------
   # --- workflows to Share this step into a Step Library
   audit-this-step:
