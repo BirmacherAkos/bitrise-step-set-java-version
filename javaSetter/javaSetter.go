@@ -125,8 +125,9 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
 	//
 	// update-alternatives javac
 	cmd := j.cmdFactory.Create(
-		"sudo update-alternatives",
+		"sudo",
 		[]string{
+			"update-alternatives",
 			"--set",
 			"javac",
 			string(javaCPath),
@@ -145,8 +146,9 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
 	//
 	// update-alternatives java
 	cmd = j.cmdFactory.Create(
-		"sudo update-alternatives",
+		"sudo",
 		[]string{
+			"update-alternatives",
 			"--set",
 			"java",
 			string(javaPath),
