@@ -88,7 +88,7 @@ func (j JavaSelector) Run(cfg Config) (javaSetter.Result, error) {
 	result, err := setter.SetJava(versionToSet)
 
 	j.logger.Println()
-	j.logger.Infof("Global java & javac version on the after the command run")
+	j.logger.Infof("Global java & javac versions the after the command run")
 	j.printJavaVersion()
 	j.printJavaCVersion()
 
