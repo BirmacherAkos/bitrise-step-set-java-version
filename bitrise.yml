@@ -30,9 +30,11 @@ workflows:
         - content: |
             #!/bin/bash
 
-            if [[ "$JAVA_HOME" != "/Users/vagrant/.jenv/versions/11" ]]; 
+            if [[ "$JAVA_HOME" == "/Users/vagrant/.jenv/versions/11" ]]; 
             then
-              echo "JAVA_HOME is not the expected value $JAVA_HOME; Expected value is: /Users/vagrant/.jenv/versions/11"
+              echo "JAVA_HOME is the expected value $JAVA_HOME = /Users/vagrant/.jenv/versions/11"
+            else
+              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/11"
               exit 1
             fi
 
