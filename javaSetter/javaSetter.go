@@ -11,8 +11,8 @@ import (
 type JavaVersion string
 
 const (
-	JavaVersion_1_8 = JavaVersion("1.8")
-	JavaVersion_11  = JavaVersion("11")
+	JavaVersion_8  = JavaVersion("8")
+	JavaVersion_11 = JavaVersion("11")
 )
 
 type Platform string
@@ -23,9 +23,9 @@ const (
 )
 
 const (
-	UbuntuJavaPath_1_8  = "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
-	UbuntuJavaCPath_1_8 = "/usr/lib/jvm/java-8-openjdk-amd64/bin/javac"
-	UbuntuJavaHome_1_8  = "/usr/lib/jvm/java-8-openjdk-amd64"
+	UbuntuJavaPath_8   = "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
+	UbuntuJavaCPath_8  = "/usr/lib/jvm/java-8-openjdk-amd64/bin/javac"
+	UbuntuJavaHome_1_8 = "/usr/lib/jvm/java-8-openjdk-amd64"
 
 	UbuntuJavaPath_11  = "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
 	UbuntuJavaCPath_11 = "/usr/lib/jvm/java-11-openjdk-amd64/bin/javac"
@@ -56,10 +56,6 @@ func (j JavaSetter) SetJava(version JavaVersion) error {
 	j.logger.Printf("Platform: %s", string(platform))
 
 	j.logger.Println()
-	j.logger.Infof("Setting java version")
-	j.logger.Printf("Selected version: %s", string(version))
-
-	j.logger.Println()
 	j.logger.Infof("Running platform specific commands to set java version")
 	switch platform {
 	case MacOS:
@@ -70,6 +66,10 @@ func (j JavaSetter) SetJava(version JavaVersion) error {
 }
 
 func (j JavaSetter) setJavaMac(version JavaVersion) error {
+	if version == JavaVersion_8 {
+		version = JavaVersion("1.8")
+	}
+
 	//
 	// jenv global
 	cmd_jenv := j.cmdFactory.Create(
@@ -115,8 +115,8 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
 	javaPath, javaCPath, javaHome := func() (string, string, string) {
 		switch version {
-		case JavaVersion_1_8:
-			return UbuntuJavaPath_1_8, UbuntuJavaCPath_1_8, UbuntuJavaHome_1_8
+		case JavaVersion_8:
+			return UbuntuJavaPath_8, UbuntuJavaCPath_8, UbuntuJavaHome_1_8
 		case JavaVersion_11:
 			return UbuntuJavaPath_11, UbuntuJavaCPath_11, UbuntuJavaHome_11
 		default:

@@ -39,13 +39,21 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/11"
               exit 1
             fi
+    - script:
+        title: Print - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
 
-    # Test Java 1.8
+            java -version
+            javac -version
+
+    # Test Java 8
     - path::./:
-        title: Test - Setting Java 1.8
+        title: Test - Setting Java 8
         run_if: .IsCI
         inputs:
-        - set_java_version: "1.8"
+        - set_java_version: "8"
     - script:
         title: Test - JAVA_HOME set to /Users/vagrant/.jenv/versions/1.8
         inputs:
@@ -59,6 +67,14 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/1.8"
               exit 1
             fi
+    - script:
+        title: Print - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            java -version
+            javac -version
 
   test_ubuntu:
     steps:
@@ -86,13 +102,21 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /usr/lib/jvm/java-11-openjdk-amd64"
               exit 1
             fi
+    - script:
+        title: Print - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
 
-    # Test Java 1.8
+            java -version
+            javac -version
+
+    # Test Java 8
     - path::./:
-        title: Test - Setting Java 1.8
+        title: Test - Setting Java 8
         run_if: .IsCI
         inputs:
-        - set_java_version: "1.8"
+        - set_java_version: "8"
     - script:
         title: Test - JAVA_HOME set to /usr/lib/jvm/java-8-openjdk-amd64
         inputs:
@@ -106,6 +130,14 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /usr/lib/jvm/java-8-openjdk-amd64"
               exit 1
             fi
+    - script:
+        title: Print - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            java -version
+            javac -version
 
 
   # ----------------------------------------------------------------
