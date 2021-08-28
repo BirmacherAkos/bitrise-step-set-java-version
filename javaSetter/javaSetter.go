@@ -60,6 +60,8 @@ func (j JavaSetter) SetJava(version JavaVersion) error {
 }
 
 func (j JavaSetter) setJavaMac(version JavaVersion) error {
+	//
+	// jenv global
 	cmd_jenv := j.cmdFactory.Create(
 		"jenv",
 		[]string{"global", string(version)},
@@ -67,32 +69,35 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 			Stdout: os.Stdout,
 			Stderr: os.Stderr,
 		})
-	j.logger.Println()
-	j.logger.Printf("$ %s", cmd_jenv.PrintableCommandArgs())
 
+	j.logger.Printf("$ %s", cmd_jenv.PrintableCommandArgs())
 	if _, err := cmd_jenv.RunAndReturnExitCode(); err != nil {
 		return err
 	}
 
+	//
+	// jenv prefix
 	cmd_prefix := j.cmdFactory.Create(
 		"jenv",
 		[]string{"prefix"},
 		nil,
 	)
+
 	j.logger.Printf("$ %s", cmd_prefix.PrintableCommandArgs())
 	jenvPrefix, err := cmd_prefix.RunAndReturnTrimmedOutput()
-
 	if err != nil {
 		return err
 	}
 
+	//
+	// envman add
 	cmd_envman := j.cmdFactory.Create(
 		"envman",
 		[]string{"add", "--key", "JAVA_HOME", "--value", jenvPrefix},
 		nil,
 	)
-	j.logger.Printf("$ %s", cmd_envman.PrintableCommandArgs())
 
+	j.logger.Printf("$ %s", cmd_envman.PrintableCommandArgs())
 	_, err = cmd_envman.RunAndReturnExitCode()
 	return err
 }
