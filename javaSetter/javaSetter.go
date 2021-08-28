@@ -65,7 +65,7 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 	}
 
 	cmd_prefix := j.cmdFactory.Create(
-		"$(jenv prefix)",
+		"(jenv prefix)",
 		[]string{},
 		nil,
 	)
