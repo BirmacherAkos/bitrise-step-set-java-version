@@ -74,16 +74,16 @@ workflows:
         inputs:
         - set_java_version: "11"
     - script:
-        title: Test - JAVA_HOME set to /Users/vagrant/.jenv/versions/11
+        title: Test - JAVA_HOME set to /usr/lib/jvm/java-11-openjdk-amd64
         inputs:
         - content: |
             #!/bin/bash
 
-            if [[ "$JAVA_HOME" == "/Users/vagrant/.jenv/versions/11" ]]; 
+            if [[ "$JAVA_HOME" == "/usr/lib/jvm/java-11-openjdk-amd64" ]]; 
             then
-              echo "JAVA_HOME is the expected value $JAVA_HOME = /Users/vagrant/.jenv/versions/11"
+              echo "JAVA_HOME is the expected value $JAVA_HOME = /usr/lib/jvm/java-11-openjdk-amd64"
             else
-              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/11"
+              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /usr/lib/jvm/java-11-openjdk-amd64"
               exit 1
             fi
 
@@ -94,16 +94,16 @@ workflows:
         inputs:
         - set_java_version: "1.8"
     - script:
-        title: Test - JAVA_HOME set to /Users/vagrant/.jenv/versions/1.8
+        title: Test - JAVA_HOME set to /usr/lib/jvm/java-8-openjdk-amd64
         inputs:
         - content: |
             #!/bin/bash
 
-            if [[ "$JAVA_HOME" == "/Users/vagrant/.jenv/versions/1.8" ]]; 
+            if [[ "$JAVA_HOME" == "/usr/lib/jvm/java-8-openjdk-amd64" ]]; 
             then
-              echo "JAVA_HOME is the expected value $JAVA_HOME = /Users/vagrant/.jenv/versions/1.8"
+              echo "JAVA_HOME is the expected value $JAVA_HOME = /usr/lib/jvm/java-8-openjdk-amd64"
             else
-              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/1.8"
+              echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /usr/lib/jvm/java-8-openjdk-amd64"
               exit 1
             fi
 
