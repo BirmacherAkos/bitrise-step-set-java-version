@@ -40,7 +40,7 @@ func (j JavaSelector) ProcessConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
-	stepconf.Print(input) // TODO: log.Infof(stepconf.toString(input))
+	stepconf.Print(input)
 	return Config{
 		javaVersion: input.JavaVersion,
 	}, nil

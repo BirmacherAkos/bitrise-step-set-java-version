@@ -22,12 +22,20 @@ const (
 	Ubuntu = Platform("Ubuntu")
 )
 
+const (
+	UbuntuJavaPath_1_8  = "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java"
+	UbuntuJavaCPath_1_8 = "/usr/lib/jvm/java-8-openjdk-amd64/bin/javac"
+	UbuntuJavaHome_1_8  = "/usr/lib/jvm/java-8-openjdk-amd64"
+
+	UbuntuJavaPath_11  = "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
+	UbuntuJavaCPath_11 = "/usr/lib/jvm/java-11-openjdk-amd64/bin/javac"
+	UbuntuJavaHome_11  = "/usr/lib/jvm/java-11-openjdk-amd64"
+)
+
 func (j JavaSetter) platform() Platform {
 	if runtime.GOOS == "linux" {
-		j.logger.Printf("Platform: Ubuntu")
 		return Ubuntu
 	}
-	j.logger.Printf("Platform: MacOS")
 	return MacOS
 }
 
@@ -41,7 +49,19 @@ func New(logger log.Logger, cmdFactory command.Factory) *JavaSetter {
 }
 
 func (j JavaSetter) SetJava(version JavaVersion) error {
-	switch j.platform() {
+	j.logger.Println()
+	j.logger.Infof("Checking platform")
+
+	platform := j.platform()
+	j.logger.Printf("Platform: %s", string(platform))
+
+	j.logger.Println()
+	j.logger.Infof("Setting java version")
+	j.logger.Printf("Selected version: %s", string(version))
+
+	j.logger.Println()
+	j.logger.Infof("Running platform specific commands to set java version")
+	switch platform {
 	case MacOS:
 		return j.setJavaMac(version)
 	default:
@@ -50,6 +70,8 @@ func (j JavaSetter) SetJava(version JavaVersion) error {
 }
 
 func (j JavaSetter) setJavaMac(version JavaVersion) error {
+	//
+	// jenv global
 	cmd_jenv := j.cmdFactory.Create(
 		"jenv",
 		[]string{"global", string(version)},
@@ -57,37 +79,109 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 			Stdout: os.Stdout,
 			Stderr: os.Stderr,
 		})
-	j.logger.Println()
-	j.logger.Printf("$ %s", cmd_jenv.PrintableCommandArgs())
 
+	j.logger.Printf("$ %s", cmd_jenv.PrintableCommandArgs())
 	if _, err := cmd_jenv.RunAndReturnExitCode(); err != nil {
 		return err
 	}
 
+	//
+	// jenv prefix
 	cmd_prefix := j.cmdFactory.Create(
 		"jenv",
 		[]string{"prefix"},
 		nil,
 	)
+
 	j.logger.Printf("$ %s", cmd_prefix.PrintableCommandArgs())
 	jenvPrefix, err := cmd_prefix.RunAndReturnTrimmedOutput()
-
 	if err != nil {
 		return err
 	}
 
+	//
+	// envman add
 	cmd_envman := j.cmdFactory.Create(
 		"envman",
 		[]string{"add", "--key", "JAVA_HOME", "--value", jenvPrefix},
 		nil,
 	)
-	j.logger.Printf("$ %s", cmd_envman.PrintableCommandArgs())
 
+	j.logger.Printf("$ %s", cmd_envman.PrintableCommandArgs())
 	_, err = cmd_envman.RunAndReturnExitCode()
 	return err
 }
 
 func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
-	j.logger.Printf("sudo update-alternatives --set javac /usr/lib/jvm/java-8-openjdk-amd64/bin/javac...")
+	javaPath, javaCPath, javaHome := func() (string, string, string) {
+		switch version {
+		case JavaVersion_1_8:
+			return UbuntuJavaPath_1_8, UbuntuJavaCPath_1_8, UbuntuJavaHome_1_8
+		case JavaVersion_11:
+			return UbuntuJavaPath_11, UbuntuJavaCPath_11, UbuntuJavaHome_11
+		default:
+			return "", "", ""
+		}
+	}()
+
+	//
+	// update-alternatives javac
+	cmd := j.cmdFactory.Create(
+		"sudo",
+		[]string{
+			"update-alternatives",
+			"--set",
+			"javac",
+			string(javaCPath),
+		},
+		&command.Opts{
+			Stdout: os.Stdout,
+			Stderr: os.Stderr,
+		},
+	)
+
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+		return err
+	}
+
+	//
+	// update-alternatives java
+	cmd = j.cmdFactory.Create(
+		"sudo",
+		[]string{
+			"update-alternatives",
+			"--set",
+			"java",
+			string(javaPath),
+		},
+		nil,
+	)
+
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+		return err
+	}
+
+	//
+	// envman JAVA_HOME
+	cmd = j.cmdFactory.Create(
+		"envman",
+		[]string{
+			"add",
+			"--key",
+			"JAVA_HOME",
+			"--value",
+			javaHome,
+			string(javaPath),
+		},
+		nil,
+	)
+
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+		return err
+	}
+
 	return nil
 }
