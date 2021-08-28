@@ -29,8 +29,8 @@ workflows:
         inputs:
         - content: |
             #!/bin/bash
-            java -version
-            if [[$JAVA_HOME != "/Users/vagrant/.jenv/versions/11"]]; 
+
+            if [$JAVA_HOME != "/Users/vagrant/.jenv/versions/11"]; 
             then
               echo "JAVA_HOME is not the expected value /Users/vagrant/.jenv/versions/11; Value is: $JAVA_HOME"
             fi
