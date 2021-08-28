@@ -40,12 +40,12 @@ workflows:
               exit 1
             fi
 
-    # Test Java 1.8
+    # Test Java 8
     - path::./:
-        title: Test - Setting Java 1.8
+        title: Test - Setting Java 8
         run_if: .IsCI
         inputs:
-        - set_java_version: "1.8"
+        - set_java_version: "8"
     - script:
         title: Test - JAVA_HOME set to /Users/vagrant/.jenv/versions/1.8
         inputs:
@@ -87,12 +87,12 @@ workflows:
               exit 1
             fi
 
-    # Test Java 1.8
+    # Test Java 8
     - path::./:
-        title: Test - Setting Java 1.8
+        title: Test - Setting Java 8
         run_if: .IsCI
         inputs:
-        - set_java_version: "1.8"
+        - set_java_version: "8"
     - script:
         title: Test - JAVA_HOME set to /usr/lib/jvm/java-8-openjdk-amd64
         inputs:
