@@ -56,10 +56,6 @@ func (j JavaSetter) SetJava(version JavaVersion) error {
 	j.logger.Printf("Platform: %s", string(platform))
 
 	j.logger.Println()
-	j.logger.Infof("Setting java version")
-	j.logger.Printf("Selected version: %s", string(version))
-
-	j.logger.Println()
 	j.logger.Infof("Running platform specific commands to set java version")
 	switch platform {
 	case MacOS:
