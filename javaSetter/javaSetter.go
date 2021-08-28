@@ -40,12 +40,15 @@ func New(logger log.Logger, cmdFactory command.Factory) *JavaSetter {
 
 func (j JavaSetter) SetJava(version JavaVersion) error {
 	j.logger.Println()
-	j.logger.Printf("Checking platform")
+	j.logger.Infof("Checking platform")
 
 	platform := j.platform()
 	j.logger.Printf("Platform: %s", string(platform))
 
-	j.logger.Infof("Setting java version: %s", string(version))
+	j.logger.Println()
+	j.logger.Infof("Setting java version")
+	j.logger.Printf("Selected version %s", string(version))
+
 	switch platform {
 	case MacOS:
 		return j.setJavaMac(version)
