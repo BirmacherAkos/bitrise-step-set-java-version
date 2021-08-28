@@ -1,6 +1,17 @@
 title: Set java version
-summary: Set the java version used during the build
-description: You can select which installed java version to be used during the build run
+summary: This step helps you in setting an already installed java version on the virtual machine.
+description: |
+  This step helps you in setting an already installed java version on the virtual machine. Mind you, that this step can't install any java version, it's only for changing between the already installed versions.
+
+  If you want to install other java version you can do it by [this guide](https://devcenter.bitrise.io/infrastructure/virtual-machines/#switching-to-a-java-version-not-installed-on-our-android-stacks).
+
+  ### Troubleshooting
+  
+  If the step fails to set the java version, you can use these [scripts](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions) as a temporary workaround.
+
+  ### Useful links
+
+  [Managing Java versions on Bitrise](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions)
 website: https://github.com/BirmacherAkos/bitrise-step-set-java-version
 source_code_url: https://github.com/BirmacherAkos/bitrise-step-set-java-version
 support_url: https://github.com/BirmacherAkos/bitrise-step-set-java-version/issues

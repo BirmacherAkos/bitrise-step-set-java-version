@@ -2,12 +2,23 @@
 
 [![Step changelog](https://shields.io/github/v/release/BirmacherAkos/bitrise-step-set-java-version?include_prereleases&label=changelog&color=blueviolet)](https://github.com/BirmacherAkos/bitrise-step-set-java-version/releases)
 
-Set the java version used during the build
+This step helps you in setting an already installed java version on the virtual machine.
 
 <details>
 <summary>Description</summary>
 
-You can select which installed java version to be used during the build run
+This step helps you in setting an already installed java version on the virtual machine. Mind you, that this step can't install any java version, it's only for changing between the already installed versions.
+
+If you want to install other java version you can do it by [this guide](https://devcenter.bitrise.io/infrastructure/virtual-machines/#switching-to-a-java-version-not-installed-on-our-android-stacks).
+
+### Troubleshooting
+
+If the step fails to set the java version, you can use these [scripts](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions) as a temporary workaround.
+
+### Useful links
+
+[Managing Java versions on Bitrise](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions)
+
 </details>
 
 ## 🧩 Get started
