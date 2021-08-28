@@ -48,7 +48,11 @@ func New(logger log.Logger, cmdFactory command.Factory) *JavaSetter {
 	return &JavaSetter{logger: logger, cmdFactory: cmdFactory}
 }
 
-func (j JavaSetter) SetJava(version JavaVersion) error {
+type Result struct {
+	JAVA_HOME string
+}
+
+func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 	j.logger.Println()
 	j.logger.Infof("Checking platform")
 
@@ -65,7 +69,7 @@ func (j JavaSetter) SetJava(version JavaVersion) error {
 	}
 }
 
-func (j JavaSetter) setJavaMac(version JavaVersion) error {
+func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 	if version == JavaVersion_8 {
 		version = JavaVersion("1.8")
 	}
@@ -82,7 +86,7 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 
 	j.logger.Printf("$ %s", cmd_jenv.PrintableCommandArgs())
 	if _, err := cmd_jenv.RunAndReturnExitCode(); err != nil {
-		return err
+		return Result{}, err
 	}
 
 	//
@@ -94,25 +98,14 @@ func (j JavaSetter) setJavaMac(version JavaVersion) error {
 	)
 
 	j.logger.Printf("$ %s", cmd_prefix.PrintableCommandArgs())
-	jenvPrefix, err := cmd_prefix.RunAndReturnTrimmedOutput()
+	javaHome, err := cmd_prefix.RunAndReturnTrimmedOutput()
 	if err != nil {
-		return err
+		return Result{}, err
 	}
-
-	//
-	// envman add
-	cmd_envman := j.cmdFactory.Create(
-		"envman",
-		[]string{"add", "--key", "JAVA_HOME", "--value", jenvPrefix},
-		nil,
-	)
-
-	j.logger.Printf("$ %s", cmd_envman.PrintableCommandArgs())
-	_, err = cmd_envman.RunAndReturnExitCode()
-	return err
+	return Result{JAVA_HOME: javaHome}, nil
 }
 
-func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
+func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	javaPath, javaCPath, javaHome := func() (string, string, string) {
 		switch version {
 		case JavaVersion_8:
@@ -142,7 +135,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
 	if _, err := cmd.RunAndReturnExitCode(); err != nil {
-		return err
+		return Result{}, err
 	}
 
 	//
@@ -160,28 +153,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) error {
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
 	if _, err := cmd.RunAndReturnExitCode(); err != nil {
-		return err
+		return Result{}, err
 	}
-
-	//
-	// envman JAVA_HOME
-	cmd = j.cmdFactory.Create(
-		"envman",
-		[]string{
-			"add",
-			"--key",
-			"JAVA_HOME",
-			"--value",
-			javaHome,
-			string(javaPath),
-		},
-		nil,
-	)
-
-	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	if _, err := cmd.RunAndReturnExitCode(); err != nil {
-		return err
-	}
-
-	return nil
+	return Result{JAVA_HOME: javaHome}, nil
 }

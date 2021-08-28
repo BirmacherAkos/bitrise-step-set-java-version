@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 
-	"github.com/BirmacherAkos/bitrise-step-set-java-version/javaSetter"
 	"github.com/bitrise-io/go-steputils/stepconf"
 	"github.com/bitrise-io/go-steputils/stepenv"
 	"github.com/bitrise-io/go-utils/command"
@@ -29,12 +28,13 @@ func run() int {
 		return 1
 	}
 
-	if err := javaSelector.Run(config); err != nil {
+	result, err := javaSelector.Run(config)
+	if err != nil {
 		logger.Errorf(err.Error())
 		return 1
 	}
 
-	if err := javaSelector.Export(javaSetter.JavaVersion(config.javaVersion)); err != nil {
+	if err := javaSelector.Export(result); err != nil {
 		logger.Errorf(err.Error())
 		return 1
 	}
