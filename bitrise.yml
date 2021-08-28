@@ -39,6 +39,14 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/11"
               exit 1
             fi
+    - script:
+        title: Test - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            java -version
+            javac -version
 
     # Test Java 8
     - path::./:
@@ -59,6 +67,14 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /Users/vagrant/.jenv/versions/1.8"
               exit 1
             fi
+    - script:
+        title: Test - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            java -version
+            javac -version
 
   test_ubuntu:
     steps:
@@ -86,6 +102,14 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /usr/lib/jvm/java-11-openjdk-amd64"
               exit 1
             fi
+    - script:
+        title: Test - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            java -version
+            javac -version
 
     # Test Java 8
     - path::./:
@@ -106,6 +130,14 @@ workflows:
               echo "JAVA_HOME is not the expected value $JAVA_HOME . Expected value is: /usr/lib/jvm/java-8-openjdk-amd64"
               exit 1
             fi
+    - script:
+        title: Test - Java & Javac
+        inputs:
+        - content: |
+            #!/bin/bash
+
+            java -version
+            javac -version
 
 
   # ----------------------------------------------------------------
