@@ -8,7 +8,7 @@ import (
 	"github.com/bitrise-io/go-utils/command"
 	"github.com/bitrise-io/go-utils/env"
 	"github.com/bitrise-io/go-utils/log"
-	"github.com/bitrise-steplib/bitrise-step-set-java-version/javaSetter"
+	"github.com/bitrise-steplib/bitrise-step-set-java-version/javasetter"
 )
 
 // Input is the Set java version step configuration
@@ -16,6 +16,7 @@ type Input struct {
 	JavaVersion string `env:"set_java_version,opt[11,8]"`
 }
 
+// Config ...
 type Config struct {
 	javaVersion string
 }
@@ -82,33 +83,33 @@ func (j JavaSelector) printJavaCVersion() error {
 }
 
 // Run ...
-func (j JavaSelector) Run(cfg Config) (javaSetter.Result, error) {
-	versionToSet := javaSetter.JavaVersion(cfg.javaVersion)
-	setter := javaSetter.New(j.logger, j.cmdFactory)
+func (j JavaSelector) Run(cfg Config) (javasetter.Result, error) {
+	versionToSet := javasetter.JavaVersion(cfg.javaVersion)
+	setter := javasetter.New(j.logger, j.cmdFactory)
 	result, err := setter.SetJava(versionToSet)
 
 	j.logger.Println()
 	j.logger.Infof("Global java & javac versions the after the command run")
 	if err := j.printJavaVersion(); err != nil {
-		return javaSetter.Result{}, err
+		return javasetter.Result{}, err
 	}
 	if err := j.printJavaCVersion(); err != nil {
-		return javaSetter.Result{}, err
+		return javasetter.Result{}, err
 	}
 
 	return result, err
 }
 
 // Export ...
-func (j JavaSelector) Export(result javaSetter.Result) error {
-	if string(result.JAVA_HOME) == "" {
+func (j JavaSelector) Export(result javasetter.Result) error {
+	if string(result.JavaHome) == "" {
 		return nil
 	}
 
 	j.logger.Println()
 	j.logger.Infof("Export step outputs")
-	j.logger.Printf("- Exporting JAVA_HOME=%s", result.JAVA_HOME)
-	if err := tools.ExportEnvironmentWithEnvman("JAVA_HOME", result.JAVA_HOME); err != nil {
+	j.logger.Printf("- Exporting JAVA_HOME=%s", result.JavaHome)
+	if err := tools.ExportEnvironmentWithEnvman("JAVA_HOME", result.JavaHome); err != nil {
 		return fmt.Errorf("failed to export environment variable: %s", "JAVA_HOME")
 	}
 	return nil
