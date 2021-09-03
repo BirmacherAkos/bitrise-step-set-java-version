@@ -33,7 +33,7 @@ inputs:
     title: Java version to be set globally for the build
     summary: Select the installed java version you want to use during the build run.
     description: |
-      Select the instlled java version you want to use during the build run.
+      Select the installed java version you want to use during the build run.
 
       You can check [here](https://github.com/bitrise-io/bitrise.io/tree/master/system_reports) which java versions are installed on each Bitrise stack.
     is_required: true
