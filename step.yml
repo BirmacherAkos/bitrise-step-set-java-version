@@ -24,7 +24,7 @@ is_skippable: false
 
 toolkit:
   go:
-    package_name: github.com/BirmacherAkos/bitrise-step-set-java-version
+    package_name: github.com/bitrise-steplib/bitrise-step-set-java-version
 
 
 inputs:

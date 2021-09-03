@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 
-	"github.com/BirmacherAkos/bitrise-step-set-java-version/javaSetter"
 	"github.com/bitrise-io/go-steputils/stepconf"
 	"github.com/bitrise-io/go-steputils/tools"
 	"github.com/bitrise-io/go-utils/command"
 	"github.com/bitrise-io/go-utils/env"
 	"github.com/bitrise-io/go-utils/log"
+	"github.com/bitrise-steplib/bitrise-step-set-java-version/javaSetter"
 )
 
-// Config is the Set java version step configuration
+// Input is the Set java version step configuration
 type Input struct {
 	JavaVersion string `env:"set_java_version,opt[11,8]"`
 }
@@ -28,7 +28,7 @@ type JavaSelector struct {
 	cmdFactory    command.Factory
 }
 
-// NewActivateSSHKey ...
+// NewJavaSelector ...
 func NewJavaSelector(inputParser stepconf.InputParser, envRepository env.Repository, logger log.Logger, cmdFactory command.Factory) *JavaSelector {
 	return &JavaSelector{inputParser: inputParser, envRepository: envRepository, logger: logger, cmdFactory: cmdFactory}
 }
@@ -89,8 +89,12 @@ func (j JavaSelector) Run(cfg Config) (javaSetter.Result, error) {
 
 	j.logger.Println()
 	j.logger.Infof("Global java & javac versions the after the command run")
-	j.printJavaVersion()
-	j.printJavaCVersion()
+	if err := j.printJavaVersion(); err != nil {
+		return javaSetter.Result{}, err
+	}
+	if err := j.printJavaCVersion(); err != nil {
+		return javaSetter.Result{}, err
+	}
 
 	return result, err
 }
