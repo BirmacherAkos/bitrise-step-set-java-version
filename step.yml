@@ -12,9 +12,9 @@ description: |
   ### Useful links
 
   [Managing Java versions on Bitrise](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions)
-website: https://github.com/BirmacherAkos/bitrise-step-set-java-version
-source_code_url: https://github.com/BirmacherAkos/bitrise-step-set-java-version
-support_url: https://github.com/BirmacherAkos/bitrise-step-set-java-version/issues
+website: https://github.com/bitrise-steplib/bitrise-step-set-java-version
+source_code_url: https://github.com/bitrise-steplib/bitrise-step-set-java-version
+support_url: https://github.com/bitrise-steplib/bitrise-step-set-java-version/issues
 
 type_tags:
   - utility
