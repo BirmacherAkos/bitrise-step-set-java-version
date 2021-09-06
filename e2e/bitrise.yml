@@ -37,7 +37,7 @@ workflows:
 
             if [[ $VERSION != $EXPECTED_VERSION ]]; then
               echo "Unexpected JDK version: $VERSION"
-              echo "Expected: $EXPECTED_VERSION
+              echo "Expected: $EXPECTED_VERSION"
               exit 1
             else
               echo "JDK version is correct: $VERSION"
