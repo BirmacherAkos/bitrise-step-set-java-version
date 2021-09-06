@@ -33,11 +33,12 @@ workflows:
         inputs:
         - content: |-
             set -ex
-            VERSION=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1)
+            VERSION=`java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1`
 
             if [[ $VERSION != $EXPECTED_VERSION ]]; then
               echo "Unexpected JDK version: $VERSION"
               echo "Expected: $EXPECTED_VERSION
+              exit 1
             else
               echo "JDK version is correct: $VERSION"
             fi
