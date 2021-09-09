@@ -158,7 +158,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 
 	//
 	// update-alternatives javadoc
-	cmd := j.cmdFactory.Create(
+	cmd = j.cmdFactory.Create(
 		"sudo",
 		[]string{
 			"update-alternatives",
