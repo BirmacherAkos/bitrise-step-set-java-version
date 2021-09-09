@@ -104,14 +104,16 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 }
 
 func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
-	javaPath, javaCPath, javaHome := func() (string, string, string) {
+	javaPath, javaCPath, javadocPath, javaHome := func() (string, string, string, string) {
 		switch version {
 		case JavaVersion8:
-			return "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java", "/usr/lib/jvm/java-8-openjdk-amd64/bin/javac", "/usr/lib/jvm/java-8-openjdk-amd64"
+			mainDir := "/usr/lib/jvm/java-8-openjdk-amd64"
+			return mainDir+"/jre/bin/java", mainDir+"/bin/javac", mainDir+"/bin/javadoc", mainDir
 		case JavaVersion11:
-			return "/usr/lib/jvm/java-11-openjdk-amd64/bin/java", "/usr/lib/jvm/java-11-openjdk-amd64/bin/javac", "/usr/lib/jvm/java-11-openjdk-amd64"
+			mainDir := "/usr/lib/jvm/java-11-openjdk-amd64"
+			return mainDir+"/bin/java", mainDir+"/bin/javac", mainDir+"/bin/javadoc", mainDir
 		default:
-			return "", "", ""
+			return "", "", "", ""
 		}
 	}()
 
@@ -153,5 +155,24 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	if _, err := cmd.RunAndReturnExitCode(); err != nil {
 		return Result{}, err
 	}
+
+	//
+	// update-alternatives javadoc
+	cmd := j.cmdFactory.Create(
+		"sudo",
+		[]string{
+			"update-alternatives",
+			"--set",
+			"javadoc",
+			javadocPath,
+		},
+		nil,
+	)
+
+	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
+	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+		return Result{}, err
+	}
+
 	return Result{JavaHome: javaHome}, nil
 }
