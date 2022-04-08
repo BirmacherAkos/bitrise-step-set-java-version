@@ -1,7 +1,6 @@
 package javasetter
 
 import (
-	"os"
 	"path/filepath"
 	"runtime"
 
@@ -72,13 +71,7 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 
 	//
 	// jenv global
-	cmdJenv := j.cmdFactory.Create(
-		"jenv",
-		[]string{"global", string(version)},
-		&command.Opts{
-			Stdout: os.Stdout,
-			Stderr: os.Stderr,
-		})
+	cmdJenv := j.cmdFactory.Create("jenv", []string{"global", string(version)}, nil)
 
 	j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
 	if output, err := cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
@@ -88,11 +81,7 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 
 	//
 	// jenv prefix
-	cmdPrefix := j.cmdFactory.Create(
-		"jenv",
-		[]string{"prefix"},
-		nil,
-	)
+	cmdPrefix := j.cmdFactory.Create("jenv", []string{"prefix"}, nil)
 
 	j.logger.Printf("$ %s", cmdPrefix.PrintableCommandArgs())
 	javaHome, err := cmdPrefix.RunAndReturnTrimmedCombinedOutput()
@@ -122,19 +111,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 
 	//
 	// update-alternatives javac
-	cmd := j.cmdFactory.Create(
-		"sudo",
-		[]string{
-			"update-alternatives",
-			"--set",
-			"javac",
-			javacPath,
-		},
-		&command.Opts{
-			Stdout: os.Stdout,
-			Stderr: os.Stderr,
-		},
-	)
+	cmd := j.cmdFactory.Create("sudo", []string{"update-alternatives", "--set", "javac", javacPath}, nil)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
 	if output, err := cmd.RunAndReturnTrimmedCombinedOutput(); err != nil {
@@ -144,16 +121,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 
 	//
 	// update-alternatives java
-	cmd = j.cmdFactory.Create(
-		"sudo",
-		[]string{
-			"update-alternatives",
-			"--set",
-			"java",
-			javaPath,
-		},
-		nil,
-	)
+	cmd = j.cmdFactory.Create("sudo", []string{"update-alternatives", "--set", "java", javaPath}, nil)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
 	if output, err := cmd.RunAndReturnTrimmedCombinedOutput(); err != nil {
@@ -163,16 +131,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 
 	//
 	// update-alternatives javadoc
-	cmd = j.cmdFactory.Create(
-		"sudo",
-		[]string{
-			"update-alternatives",
-			"--set",
-			"javadoc",
-			javadocPath,
-		},
-		nil,
-	)
+	cmd = j.cmdFactory.Create("sudo", []string{"update-alternatives", "--set", "javadoc", javadocPath}, nil)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
 	if output, err := cmd.RunAndReturnTrimmedCombinedOutput(); err != nil {
