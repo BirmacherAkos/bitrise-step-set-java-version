@@ -80,6 +80,9 @@ func (j JavaSelector) Run(cfg Config) (javasetter.Result, error) {
 	versionToSet := javasetter.JavaVersion(cfg.javaVersion)
 	setter := javasetter.New(j.logger, j.cmdFactory)
 	result, err := setter.SetJava(versionToSet)
+	if err != nil {
+		return javasetter.Result{}, fmt.Errorf("failed to activate Java version %s: %w", versionToSet, err)
+	}
 
 	j.logger.Println()
 	j.logger.Infof("Global java & javac versions the after the command run")
