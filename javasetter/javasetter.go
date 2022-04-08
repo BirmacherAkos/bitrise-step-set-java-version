@@ -2,6 +2,7 @@ package javasetter
 
 import (
 	"os"
+	"path/filepath"
 	"runtime"
 
 	"github.com/bitrise-io/go-utils/v2/command"
@@ -15,6 +16,7 @@ type JavaVersion string
 const (
 	JavaVersion8  = JavaVersion("8")
 	JavaVersion11 = JavaVersion("11")
+	JavaVersion17 = JavaVersion("17")
 )
 
 // Platform ...
@@ -33,23 +35,19 @@ func (j JavaSetter) platform() Platform {
 	return MacOS
 }
 
-// JavaSetter ...
 type JavaSetter struct {
 	logger     log.Logger
 	cmdFactory command.Factory
 }
 
-// New ...
 func New(logger log.Logger, cmdFactory command.Factory) *JavaSetter {
 	return &JavaSetter{logger: logger, cmdFactory: cmdFactory}
 }
 
-// Result ...
 type Result struct {
 	JavaHome string
 }
 
-// SetJava ...
 func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 	j.logger.Println()
 	j.logger.Infof("Checking platform")
@@ -69,7 +67,7 @@ func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 
 func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 	if version == JavaVersion8 {
-		version = JavaVersion("1.8")
+		version = "1.8"
 	}
 
 	//
@@ -104,18 +102,19 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 }
 
 func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
-	javaPath, javaCPath, javadocPath, javaHome := func() (string, string, string, string) {
-		switch version {
-		case JavaVersion8:
-			mainDir := "/usr/lib/jvm/java-8-openjdk-amd64"
-			return mainDir + "/jre/bin/java", mainDir + "/bin/javac", mainDir + "/bin/javadoc", mainDir
-		case JavaVersion11:
-			mainDir := "/usr/lib/jvm/java-11-openjdk-amd64"
-			return mainDir + "/bin/java", mainDir + "/bin/javac", mainDir + "/bin/javadoc", mainDir
-		default:
-			return "", "", "", ""
-		}
-	}()
+	var javaHome string
+	switch version {
+	case JavaVersion8:
+		javaHome = "/usr/lib/jvm/java-8-openjdk-amd64"
+	case JavaVersion11:
+		javaHome = "/usr/lib/jvm/java-11-openjdk-amd64"
+	case JavaVersion17:
+		javaHome = "/usr/lib/jvm/java-17-openjdk-amd64"
+	}
+
+	javaPath := filepath.Join(javaHome, "bin/java")
+	javacPath := filepath.Join(javaHome, "bin/javac")
+	javadocPath := filepath.Join(javaHome, "bin/javadoc")
 
 	//
 	// update-alternatives javac
@@ -125,7 +124,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 			"update-alternatives",
 			"--set",
 			"javac",
-			javaCPath,
+			javacPath,
 		},
 		&command.Opts{
 			Stdout: os.Stdout,
@@ -146,7 +145,7 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 			"update-alternatives",
 			"--set",
 			"java",
-			string(javaPath),
+			javaPath,
 		},
 		nil,
 	)

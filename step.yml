@@ -37,6 +37,7 @@ inputs:
       You can check [in system reports](https://github.com/bitrise-io/bitrise.io/tree/master/system_reports) which java versions are installed on each Bitrise stack.
     is_required: true
     value_options:
+    - "17"
     - "11"
     - "8"
 
