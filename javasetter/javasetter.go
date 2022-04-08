@@ -104,17 +104,19 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 }
 
 func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
-	var javaHome string
+	var javaHome, javaPath string
 	switch version {
 	case JavaVersion8:
 		javaHome = "/usr/lib/jvm/java-8-openjdk-amd64"
+		javaPath = filepath.Join(javaHome, "jre/bin/java")
 	case JavaVersion11:
 		javaHome = "/usr/lib/jvm/java-11-openjdk-amd64"
+		javaPath = filepath.Join(javaHome, "bin/java")
 	case JavaVersion17:
 		javaHome = "/usr/lib/jvm/java-17-openjdk-amd64"
+		javaPath = filepath.Join(javaHome, "bin/java")
 	}
 
-	javaPath := filepath.Join(javaHome, "bin/java")
 	javacPath := filepath.Join(javaHome, "bin/javac")
 	javadocPath := filepath.Join(javaHome, "bin/javadoc")
 
