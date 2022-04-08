@@ -81,7 +81,8 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 		})
 
 	j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
-	if _, err := cmdJenv.RunAndReturnExitCode(); err != nil {
+	if output, err := cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
+		j.logger.Warnf(output)
 		return Result{}, err
 	}
 
@@ -94,8 +95,9 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 	)
 
 	j.logger.Printf("$ %s", cmdPrefix.PrintableCommandArgs())
-	javaHome, err := cmdPrefix.RunAndReturnTrimmedOutput()
+	javaHome, err := cmdPrefix.RunAndReturnTrimmedCombinedOutput()
 	if err != nil {
+		j.logger.Warnf(javaHome)
 		return Result{}, err
 	}
 	return Result{JavaHome: javaHome}, nil
@@ -133,7 +135,8 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+	if output, err := cmd.RunAndReturnTrimmedCombinedOutput(); err != nil {
+		j.logger.Warnf(output)
 		return Result{}, err
 	}
 
@@ -151,7 +154,8 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+	if output, err := cmd.RunAndReturnTrimmedCombinedOutput(); err != nil {
+		j.logger.Warnf(output)
 		return Result{}, err
 	}
 
@@ -169,7 +173,8 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 	)
 
 	j.logger.Printf("$ %s", cmd.PrintableCommandArgs())
-	if _, err := cmd.RunAndReturnExitCode(); err != nil {
+	if output, err := cmd.RunAndReturnTrimmedCombinedOutput(); err != nil {
+		j.logger.Warnf(output)
 		return Result{}, err
 	}
 
