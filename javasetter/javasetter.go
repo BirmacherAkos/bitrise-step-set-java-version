@@ -4,8 +4,8 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/bitrise-io/go-utils/command"
-	"github.com/bitrise-io/go-utils/log"
+	"github.com/bitrise-io/go-utils/v2/command"
+	"github.com/bitrise-io/go-utils/v2/log"
 )
 
 // JavaVersion ...
@@ -108,10 +108,10 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 		switch version {
 		case JavaVersion8:
 			mainDir := "/usr/lib/jvm/java-8-openjdk-amd64"
-			return mainDir+"/jre/bin/java", mainDir+"/bin/javac", mainDir+"/bin/javadoc", mainDir
+			return mainDir + "/jre/bin/java", mainDir + "/bin/javac", mainDir + "/bin/javadoc", mainDir
 		case JavaVersion11:
 			mainDir := "/usr/lib/jvm/java-11-openjdk-amd64"
-			return mainDir+"/bin/java", mainDir+"/bin/javac", mainDir+"/bin/javadoc", mainDir
+			return mainDir + "/bin/java", mainDir + "/bin/javac", mainDir + "/bin/javadoc", mainDir
 		default:
 			return "", "", "", ""
 		}

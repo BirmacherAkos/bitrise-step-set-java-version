@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/bitrise-io/go-steputils/stepconf"
-	"github.com/bitrise-io/go-steputils/tools"
-	"github.com/bitrise-io/go-utils/command"
-	"github.com/bitrise-io/go-utils/env"
-	"github.com/bitrise-io/go-utils/log"
+	"github.com/bitrise-io/go-steputils/v2/stepconf"
+	"github.com/bitrise-io/go-utils/v2/command"
+	"github.com/bitrise-io/go-utils/v2/env"
+	"github.com/bitrise-io/go-utils/v2/log"
 	"github.com/bitrise-steplib/bitrise-step-set-java-version/javasetter"
 )
 
@@ -109,7 +108,8 @@ func (j JavaSelector) Export(result javasetter.Result) error {
 	j.logger.Println()
 	j.logger.Infof("Export step outputs")
 	j.logger.Printf("- Exporting JAVA_HOME=%s", result.JavaHome)
-	if err := tools.ExportEnvironmentWithEnvman("JAVA_HOME", result.JavaHome); err != nil {
+
+	if err := j.envRepository.Set("JAVA_HOME", result.JavaHome); err != nil {
 		return fmt.Errorf("failed to export environment variable: %s", "JAVA_HOME")
 	}
 	return nil
