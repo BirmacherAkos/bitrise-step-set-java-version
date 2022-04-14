@@ -24,6 +24,17 @@ workflows:
         inputs:
         - set_java_version: 11
 
+  test_java17:
+    envs:
+    - EXPECTED_VERSION: 17
+    after_run:
+    - _check_version
+    steps:
+    - path::./:
+        title: Execute step
+        inputs:
+        - set_java_version: 17
+
   _check_version:
     summary: Compares current JDK version to $EXPECTED_VERSION
     description: Based on https://stackoverflow.com/a/56243046

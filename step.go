@@ -3,25 +3,21 @@ package main
 import (
 	"fmt"
 
-	"github.com/bitrise-io/go-steputils/stepconf"
-	"github.com/bitrise-io/go-steputils/tools"
-	"github.com/bitrise-io/go-utils/command"
-	"github.com/bitrise-io/go-utils/env"
-	"github.com/bitrise-io/go-utils/log"
+	"github.com/bitrise-io/go-steputils/v2/stepconf"
+	"github.com/bitrise-io/go-utils/v2/command"
+	"github.com/bitrise-io/go-utils/v2/env"
+	"github.com/bitrise-io/go-utils/v2/log"
 	"github.com/bitrise-steplib/bitrise-step-set-java-version/javasetter"
 )
 
-// Input is the Set java version step configuration
 type Input struct {
-	JavaVersion string `env:"set_java_version,opt[11,8]"`
+	JavaVersion string `env:"set_java_version,opt[17,11,8]"`
 }
 
-// Config ...
 type Config struct {
 	javaVersion string
 }
 
-// JavaSelector ...
 type JavaSelector struct {
 	inputParser   stepconf.InputParser
 	envRepository env.Repository
@@ -29,12 +25,10 @@ type JavaSelector struct {
 	cmdFactory    command.Factory
 }
 
-// NewJavaSelector ...
 func NewJavaSelector(inputParser stepconf.InputParser, envRepository env.Repository, logger log.Logger, cmdFactory command.Factory) *JavaSelector {
 	return &JavaSelector{inputParser: inputParser, envRepository: envRepository, logger: logger, cmdFactory: cmdFactory}
 }
 
-// ProcessConfig ...
 func (j JavaSelector) ProcessConfig() (Config, error) {
 	var input Input
 	err := j.inputParser.Parse(&input)
@@ -82,11 +76,13 @@ func (j JavaSelector) printJavaCVersion() error {
 	return err
 }
 
-// Run ...
 func (j JavaSelector) Run(cfg Config) (javasetter.Result, error) {
 	versionToSet := javasetter.JavaVersion(cfg.javaVersion)
 	setter := javasetter.New(j.logger, j.cmdFactory)
 	result, err := setter.SetJava(versionToSet)
+	if err != nil {
+		return javasetter.Result{}, fmt.Errorf("failed to activate Java version %s: %w", versionToSet, err)
+	}
 
 	j.logger.Println()
 	j.logger.Infof("Global java & javac versions the after the command run")
@@ -100,7 +96,6 @@ func (j JavaSelector) Run(cfg Config) (javasetter.Result, error) {
 	return result, err
 }
 
-// Export ...
 func (j JavaSelector) Export(result javasetter.Result) error {
 	if string(result.JavaHome) == "" {
 		return nil
@@ -109,7 +104,8 @@ func (j JavaSelector) Export(result javasetter.Result) error {
 	j.logger.Println()
 	j.logger.Infof("Export step outputs")
 	j.logger.Printf("- Exporting JAVA_HOME=%s", result.JavaHome)
-	if err := tools.ExportEnvironmentWithEnvman("JAVA_HOME", result.JavaHome); err != nil {
+
+	if err := j.envRepository.Set("JAVA_HOME", result.JavaHome); err != nil {
 		return fmt.Errorf("failed to export environment variable: %s", "JAVA_HOME")
 	}
 	return nil

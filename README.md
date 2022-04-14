@@ -1,20 +1,23 @@
-# Set java version
+# Set Java version
 
 [![Step changelog](https://shields.io/github/v/release/bitrise-steplib/bitrise-step-set-java-version?include_prereleases&label=changelog&color=blueviolet)](https://github.com/bitrise-steplib/bitrise-step-set-java-version/releases)
 
-## 📚 Description
+This Step helps you activate pre-installed Java (JDK) version on the build virtual machine.
 
-This step helps you in setting an already installed java version on the virtual machine. Mind you, that this step can't install any java version, it's only for changing between the already installed versions.
+<details>
+<summary>Description</summary>
 
-If you want to install other java version you can do it by [this guide](https://devcenter.bitrise.io/infrastructure/virtual-machines/#switching-to-a-java-version-not-installed-on-our-android-stacks).
+This Step is not supposed to install any Java version on the fly. You can only pick from the already installed versions.
+If you want to install other Java versions, check out [Using a Java version not installed on our Android stacks](https://devcenter.bitrise.io/infrastructure/virtual-machines/#using-a-java-version-not-installed-on-our-android-stacks).
+
+### Configuring the Step
+1. In the **Java version to be set globally for the build** input, select an installed Java version you wish to use during the build run.
 
 ### Troubleshooting
-
-If the step fails to set the java version, you can use these [scripts](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions) as a temporary workaround.
+If the Step fails to set the Java version, you can use these [scripts](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions) as a temporary workaround.
 
 ### Useful links
-
-[Managing Java versions on Bitrise](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions)
+- [Managing Java versions on Bitrise](https://devcenter.bitrise.io/infrastructure/virtual-machines/#managing-java-versions)
 
 </details>
 
@@ -31,7 +34,7 @@ You can also run this step directly with [Bitrise CLI](https://github.com/bitris
 
 | Key | Description | Flags | Default |
 | --- | --- | --- | --- |
-| `set_java_version` | Select the installed java version you want to use during the build run.  You can check [here](https://github.com/bitrise-io/bitrise.io/tree/master/system_reports) which java versions are installed on each Bitrise stack.  | required | `11` |
+| `set_java_version` | Select the installed Java version you want to use during the build run.  You can check [in system reports](https://github.com/bitrise-io/bitrise.io/tree/master/system_reports) which java versions are installed on each Bitrise stack.  | required | `11` |
 </details>
 
 <details>
@@ -39,7 +42,7 @@ You can also run this step directly with [Bitrise CLI](https://github.com/bitris
 
 | Environment Variable | Description |
 | --- | --- |
-| `JAVA_HOME` | JAVA_HOME is an environment variable points to the file system location where the JDK or JRE was installed. |
+| `JAVA_HOME` | JAVA_HOME is an environment variable that points to the path where the JDK (Java Development Kit) is installed. |
 </details>
 
 ## 🙋 Contributing
