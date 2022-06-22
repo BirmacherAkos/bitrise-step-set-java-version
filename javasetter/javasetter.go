@@ -64,18 +64,41 @@ func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 	}
 }
 
+func (j JavaSetter) tryInstallOne(versions []string) error {
+	var err error
+
+	for _, version := range versions {
+		cmdJenv := j.cmdFactory.Create("jenv", []string{"global", string(version)}, nil)
+		j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
+
+		var output string
+		if output, err = cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
+			j.logger.Warnf(output)
+
+			continue
+		}
+
+		return nil
+	}
+
+	return err
+}
+
 func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
-	if version == JavaVersion8 {
-		version = "1.8"
+	var versions []string
+
+	switch version {
+	case JavaVersion8:
+		versions = []string{"1.8"}
+	case JavaVersion11:
+		versions = []string{"11", "11.0"}
+	case JavaVersion17:
+		versions = []string{"17", "17.0"}
 	}
 
 	//
 	// jenv global
-	cmdJenv := j.cmdFactory.Create("jenv", []string{"global", string(version)}, nil)
-
-	j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
-	if output, err := cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
-		j.logger.Warnf(output)
+	if err := j.tryInstallOne(versions); err != nil {
 		return Result{}, err
 	}
 
