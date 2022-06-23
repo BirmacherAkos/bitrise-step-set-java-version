@@ -65,7 +65,8 @@ func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 	}
 }
 
-func (j JavaSetter) tryToInstallOneOf(versions []string) error {
+// Added fallback versions as a fix for https://github.com/jenv/jenv/issues/366.
+func (j JavaSetter) tryToSelectOneOf(versions []string) error {
 	for _, version := range versions {
 		cmdJenv := j.cmdFactory.Create("jenv", []string{"global", string(version)}, nil)
 		j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
@@ -95,7 +96,7 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 
 	//
 	// jenv global
-	if err := j.tryToInstallOneOf(versions); err != nil {
+	if err := j.tryToSelectOneOf(versions); err != nil {
 		return Result{}, err
 	}
 
