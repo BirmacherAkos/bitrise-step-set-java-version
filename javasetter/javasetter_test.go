@@ -44,6 +44,7 @@ func Test_GivenMacNoVersionAvailable_WhenSet_ThenIsFailure(t *testing.T) {
 
 	//Then
 	require.Error(t, err)
+	t.Logf("Expected error: %s", err)
 	require.Equal(t, Result{}, got)
 	cmdFactory.AssertExpectations(t)
 }

@@ -1,6 +1,7 @@
 package javasetter
 
 import (
+	"fmt"
 	"path/filepath"
 	"runtime"
 
@@ -65,23 +66,19 @@ func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 }
 
 func (j JavaSetter) tryToInstallOneOf(versions []string) error {
-	var err error
-
 	for _, version := range versions {
 		cmdJenv := j.cmdFactory.Create("jenv", []string{"global", string(version)}, nil)
 		j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
 
-		var output string
-		if output, err = cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
+		if output, err := cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
 			j.logger.Warnf(output)
-
 			continue
 		}
 
 		return nil
 	}
 
-	return err
+	return fmt.Errorf("none of Java versions %v could be selected", versions)
 }
 
 func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
