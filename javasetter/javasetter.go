@@ -64,7 +64,7 @@ func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 	}
 }
 
-func (j JavaSetter) tryInstallOne(versions []string) error {
+func (j JavaSetter) tryToInstallOneOf(versions []string) error {
 	var err error
 
 	for _, version := range versions {
@@ -98,7 +98,7 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 
 	//
 	// jenv global
-	if err := j.tryInstallOne(versions); err != nil {
+	if err := j.tryToInstallOneOf(versions); err != nil {
 		return Result{}, err
 	}
 
