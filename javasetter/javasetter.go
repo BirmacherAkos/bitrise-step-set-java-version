@@ -1,6 +1,7 @@
 package javasetter
 
 import (
+	"fmt"
 	"path/filepath"
 	"runtime"
 
@@ -64,18 +65,38 @@ func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 	}
 }
 
+// Added fallback versions as a fix for https://github.com/jenv/jenv/issues/366.
+func (j JavaSetter) tryToSelectOneOf(versions []string) error {
+	for _, version := range versions {
+		cmdJenv := j.cmdFactory.Create("jenv", []string{"global", string(version)}, nil)
+		j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
+
+		if output, err := cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
+			j.logger.Warnf(output)
+			continue
+		}
+
+		return nil
+	}
+
+	return fmt.Errorf("none of Java versions %v could be selected", versions)
+}
+
 func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
-	if version == JavaVersion8 {
-		version = "1.8"
+	var versions []string
+
+	switch version {
+	case JavaVersion8:
+		versions = []string{"1.8"}
+	case JavaVersion11:
+		versions = []string{"11", "11.0"}
+	case JavaVersion17:
+		versions = []string{"17", "17.0"}
 	}
 
 	//
 	// jenv global
-	cmdJenv := j.cmdFactory.Create("jenv", []string{"global", string(version)}, nil)
-
-	j.logger.Printf("$ %s", cmdJenv.PrintableCommandArgs())
-	if output, err := cmdJenv.RunAndReturnTrimmedCombinedOutput(); err != nil {
-		j.logger.Warnf(output)
+	if err := j.tryToSelectOneOf(versions); err != nil {
 		return Result{}, err
 	}
 
