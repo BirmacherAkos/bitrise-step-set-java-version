@@ -34,7 +34,7 @@ inputs:
     description: |
       Select the installed Java version you want to use during the build run.
 
-      You can check [in system reports](https://github.com/bitrise-io/bitrise.io/tree/master/system_reports) which java versions are installed on each Bitrise stack.
+      You can check [in system reports](https://stacks.bitrise.io) which ava versions are installed on each Bitrise stack.
     is_required: true
     value_options:
     - "17"
