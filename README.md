@@ -34,7 +34,7 @@ You can also run this step directly with [Bitrise CLI](https://github.com/bitris
 
 | Key | Description | Flags | Default |
 | --- | --- | --- | --- |
-| `set_java_version` | Select the installed Java version you want to use during the build run.  You can check [in system reports](https://github.com/bitrise-io/bitrise.io/tree/master/system_reports) which java versions are installed on each Bitrise stack.  | required | `11` |
+| `set_java_version` | Select the installed Java version you want to use during the build run. You can check [in system reports](https://stacks.bitrise.io) which Java versions are installed on each Bitrise stack.  | required | `11` |
 </details>
 
 <details>
