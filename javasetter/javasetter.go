@@ -17,6 +17,7 @@ const (
 	JavaVersion8  = JavaVersion("8")
 	JavaVersion11 = JavaVersion("11")
 	JavaVersion17 = JavaVersion("17")
+	JavaVersion21 = JavaVersion("21")
 )
 
 // Platform ...
@@ -92,6 +93,8 @@ func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
 		versions = []string{"11", "11.0"}
 	case JavaVersion17:
 		versions = []string{"17", "17.0"}
+	case JavaVersion21:
+		versions = []string{"21", "21.0"}
 	}
 
 	//
@@ -124,6 +127,9 @@ func (j JavaSetter) setJavaUbuntu(version JavaVersion) (Result, error) {
 		javaPath = filepath.Join(javaHome, "bin/java")
 	case JavaVersion17:
 		javaHome = "/usr/lib/jvm/java-17-openjdk-amd64"
+		javaPath = filepath.Join(javaHome, "bin/java")
+	case JavaVersion21:
+		javaHome = "/usr/lib/jvm/java-21-openjdk-amd64"
 		javaPath = filepath.Join(javaHome, "bin/java")
 	}
 
