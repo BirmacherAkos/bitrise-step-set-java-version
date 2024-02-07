@@ -11,7 +11,7 @@ import (
 )
 
 type Input struct {
-	JavaVersion string `env:"set_java_version,opt[17,11,8]"`
+	JavaVersion string `env:"set_java_version,opt[21,17,11,8]"`
 }
 
 type Config struct {
