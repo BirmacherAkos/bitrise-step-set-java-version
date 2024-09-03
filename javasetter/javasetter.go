@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/bitrise-io/go-utils/v2/command"
 	"github.com/bitrise-io/go-utils/v2/log"
@@ -60,6 +61,15 @@ func (j JavaSetter) SetJava(version JavaVersion) (Result, error) {
 	j.logger.Infof("Running platform specific commands to set java version")
 	switch platform {
 	case MacOS:
+		isInstalled, err := j.isVersionInstalledMac(version)
+		if err!= nil {
+			return Result{}, err
+		}
+		if!isInstalled {
+			j.logger.Errorf("Java %s is not installed on this stack. Try either a different stack or Java version.", version)
+			return Result{}, fmt.Errorf("%s not installed", version)
+		}
+		
 		return j.setJavaMac(version)
 	default:
 		return j.setJavaUbuntu(version)
@@ -81,6 +91,26 @@ func (j JavaSetter) tryToSelectOneOf(versions []string) error {
 	}
 
 	return fmt.Errorf("none of Java versions %v could be selected", versions)
+}
+
+func (j JavaSetter) isVersionInstalledMac(version JavaVersion) (bool, error) {
+	cmdList := j.cmdFactory.Create("jenv", []string{"versions"}, nil)
+	j.logger.Printf("$ %s", cmdList.PrintableCommandArgs())
+
+	output, err := cmdList.RunAndReturnTrimmedCombinedOutput()
+	if err != nil {
+		j.logger.Warnf("Error checking installed Java versions: %s", err)
+		return false, err
+	}
+
+	installedVersions := strings.Split(output, "\n")
+	for _, v := range installedVersions {
+		if strings.Contains(v, string(version)) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 func (j JavaSetter) setJavaMac(version JavaVersion) (Result, error) {
