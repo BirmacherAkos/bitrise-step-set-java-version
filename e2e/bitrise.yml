@@ -20,7 +20,6 @@ workflows:
               esac)
             envman add --key BITRISEIO_VERSION_AVAILABLE --value "$VERSION_AVAILABLE"
 
-            
     - path::./:
         title: Execute step
         run_if: >
