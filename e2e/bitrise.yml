@@ -14,17 +14,17 @@ workflows:
         - content: >
             #!/bin/bash
             set -ex
-            VERSION_AVAILABLE=$(case "$BITRISEIO_STACK_ID" in
-                osx-xcode-14.* ) echo "true" ;;
-                osx-xcode-15.* ) echo "true" ;;
-                *) echo "false" ;;
-            esac)
-            envman add --key BITRISEIO_VERSION_AVAILABLE --value "$VERSION_AVAILABLE"
+            if [[ "$BITRISEIO_STACK_ID" == osx-xcode-15.* ]] || [[ "$BITRISEIO_STACK_ID" == osx-xcode-14.* ]]; then
+              VERSION_AVAILABLE=true
+            else
+                VERSION_AVAILABLE=false
+            fi
+            envman add --key VERSION_AVAILABLE --value "$VERSION_AVAILABLE"
 
     - path::./:
         title: Execute step
         run_if: >
-          {{ enveq "BITRISEIO_STACK_ID" "true" }}
+          {{ enveq "VERSION_AVAILABLE" "true" }}
         inputs:
         - set_java_version: 8
 
