@@ -70,6 +70,12 @@ workflows:
         inputs:
         - content: |-
             set -ex
+
+            if [[ "$VERSION_AVAILABLE" == "false" ]]; then
+              echo "JDK version is not available on stack: $BITRISEIO_STACK_ID"
+              exit 0
+            fi
+
             VERSION=`java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1`
 
             if [[ $VERSION != $EXPECTED_VERSION ]]; then
