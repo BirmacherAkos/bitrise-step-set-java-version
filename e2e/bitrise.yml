@@ -14,10 +14,10 @@ workflows:
         - content: |-
             #!/bin/bash
             set -ex
-            if [[ "$BITRISEIO_STACK_ID" == osx-xcode-15.* ]] || [[ "$BITRISEIO_STACK_ID" == osx-xcode-14.* ]]; then
+            if [[ "$BITRISEIO_STACK_ID" == osx-xcode-15.* ]] || [[ "$BITRISEIO_STACK_ID" == osx-xcode-14.* ]] || [[ "$BITRISEIO_STACK_ID" == linux-docker-android-* ]]; then
               VERSION_AVAILABLE=true
             else
-                VERSION_AVAILABLE=false
+              VERSION_AVAILABLE=false
             fi
             envman add --key VERSION_AVAILABLE --value "$VERSION_AVAILABLE"
 
