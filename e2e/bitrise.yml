@@ -8,8 +8,23 @@ workflows:
     after_run:
     - _check_version
     steps:
+    - script:
+        title: Check if JDK version is available on stack
+        inputs:
+        - content: |-
+            #!/bin/bash
+            set -ex
+            if [[ "$BITRISEIO_STACK_ID" == osx-xcode-15.* ]] || [[ "$BITRISEIO_STACK_ID" == osx-xcode-14.* ]] || [[ "$BITRISEIO_STACK_ID" == linux-docker-android-* ]]; then
+              VERSION_AVAILABLE=true
+            else
+              VERSION_AVAILABLE=false
+            fi
+            envman add --key VERSION_AVAILABLE --value "$VERSION_AVAILABLE"
+
     - path::./:
         title: Execute step
+        run_if: >
+          {{ enveq "VERSION_AVAILABLE" "true" }}
         inputs:
         - set_java_version: 8
 
@@ -55,6 +70,12 @@ workflows:
         inputs:
         - content: |-
             set -ex
+
+            if [[ "$VERSION_AVAILABLE" == "false" ]]; then
+              echo "JDK version is not available on stack: $BITRISEIO_STACK_ID"
+              exit 0
+            fi
+
             VERSION=`java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1`
 
             if [[ $VERSION != $EXPECTED_VERSION ]]; then
