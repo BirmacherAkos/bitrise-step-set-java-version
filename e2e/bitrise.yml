@@ -11,7 +11,7 @@ workflows:
     - script:
         title: Check if JDK version is available on stack
         inputs:
-        - content: >
+        - content: |-
             #!/bin/bash
             set -ex
             if [[ "$BITRISEIO_STACK_ID" == osx-xcode-15.* ]] || [[ "$BITRISEIO_STACK_ID" == osx-xcode-14.* ]]; then
