@@ -15,9 +15,10 @@ workflows:
             #!/bin/bash
             set -ex
             VERSION_AVAILABLE=$(case "$BITRISEIO_STACK_ID" in
-              osx-xcode-14.* | osx-xcode-15.*) echo "true" ;;
-              *) echo "false" ;;
-              esac)
+                osx-xcode-14.* ) echo "true" ;;
+                osx-xcode-15.* ) echo "true" ;;
+                *) echo "false" ;;
+            esac)
             envman add --key BITRISEIO_VERSION_AVAILABLE --value "$VERSION_AVAILABLE"
 
     - path::./:
