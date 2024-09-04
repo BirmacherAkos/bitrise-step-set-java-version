@@ -8,8 +8,23 @@ workflows:
     after_run:
     - _check_version
     steps:
+    - script:
+        title: Check if JDK version is available on stack
+        inputs:
+        - content: >
+            #!/bin/bash
+            set -ex
+            VERSION_AVAILABLE=$(case "$BITRISEIO_STACK_ID" in
+              osx-xcode-14.* | osx-xcode-15.*) echo "true" ;;
+              *) echo "false" ;;
+              esac)
+            envman add --key BITRISEIO_VERSION_AVAILABLE --value "$VERSION_AVAILABLE"
+
+            
     - path::./:
         title: Execute step
+        run_if: >
+          {{ enveq "BITRISEIO_STACK_ID" "true" }}
         inputs:
         - set_java_version: 8
 
